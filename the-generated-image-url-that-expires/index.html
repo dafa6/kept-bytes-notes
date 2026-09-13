@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>The generated image URL that expires — Kept Bytes</title>
+<meta name="description" content="The generated image URL that expires">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://gi25-kept-bytes.onrender.com/the-generated-image-url-that-expires/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="The generated image URL that expires — Kept Bytes">
+<meta property="og:description" content="The generated image URL that expires">
+<meta property="og:url" content="https://gi25-kept-bytes.onrender.com/the-generated-image-url-that-expires/">
+<style>*{box-sizing:border-box}body{margin:0;font:16px/1.68 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#1c1f23;background:#fdfdfc}
+.wrap{max-width:44rem;margin:0 auto;padding:2.2rem 1.25rem 4rem}
+header{border-bottom:1px solid #e5e3de;margin-bottom:2rem;padding-bottom:1.1rem}
+header a.brand{font-weight:650;font-size:1.02rem;color:#1c1f23;text-decoration:none;letter-spacing:-.01em}
+header p{margin:.3rem 0 0;color:#6b6f76;font-size:.9rem}
+h1{font-size:1.72rem;line-height:1.26;letter-spacing:-.02em;margin:0 0 .9rem}
+h2{font-size:1.2rem;margin:2.1rem 0 .6rem;letter-spacing:-.01em}
+h3{font-size:1.03rem;margin:1.6rem 0 .5rem}
+p,li{color:#26292e}
+a{color:#1256a8}
+blockquote{margin:1.3rem 0;padding:.1rem 0 .1rem 1rem;border-left:3px solid #dcd9d2;color:#4d5158}
+pre{background:#f4f3f0;padding:.85rem 1rem;overflow-x:auto;border-radius:5px;font-size:.86rem;line-height:1.5}
+code{background:#f4f3f0;padding:.12em .34em;border-radius:3px;font-size:.88em}
+pre code{background:none;padding:0}
+hr{border:0;border-top:1px solid #e5e3de;margin:2.2rem 0}
+ul.toc{list-style:none;padding:0}
+ul.toc li{margin:0 0 1.15rem}
+ul.toc a{font-weight:600;text-decoration:none;font-size:1.04rem}
+ul.toc p{margin:.2rem 0 0;color:#6b6f76;font-size:.92rem}
+footer{margin-top:3rem;padding-top:1.1rem;border-top:1px solid #e5e3de;color:#767a81;font-size:.85rem}
+footer a{color:#5b6068}
+.more{margin-top:2.6rem;padding-top:1.2rem;border-top:1px solid #e5e3de}
+.more h2{font-size:.82rem;text-transform:uppercase;letter-spacing:.07em;color:#767a81;margin:0 0 .6rem}
+.more ul{padding-left:1.1rem;margin:0}.more li{margin:.3rem 0;font-size:.94rem}</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<a class="brand" href="https://gi25-kept-bytes.onrender.com/">Kept Bytes</a>
+<p>Two notes on the parts of a generation you only miss after they are gone.</p>
+</header>
+<article><h1>The generated image URL that expires</h1>
+<p>You generate an image, get back a URL, paste it into a doc, and move on. Three days later the doc has a broken image in it.</p>
+<p>This catches people in a way that feels like a bug and is actually the documented behaviour of almost every hosted generation endpoint. It is worth understanding once, because the fix is trivial and the failure is expensive.</p>
+<h2>Why the URL is temporary</h2>
+<p>The provider generated a file and put it in object storage. Serving it forever means storing it forever, for every user, including the 90% of generations nobody ever looks at again. So the URL is signed and short-lived: minutes to hours, occasionally days.</p>
+<p>Some providers return base64 bytes instead, which has the opposite property — nothing expires, but the response is large and you have to store it yourself immediately or it is gone when the process ends.</p>
+<p>Either way the contract is the same: <strong>the provider is handing you a result, not hosting your asset.</strong></p>
+<h2>What actually breaks</h2>
+<p><strong>Documents and tickets.</strong> A URL pasted into a spec, a Jira ticket or a Slack thread is a time bomb. It renders during review and is broken by the time anyone implements against it.</p>
+<p><strong>Caches and CDNs.</strong> If your application proxies the provider URL rather than copying the bytes, your cache holds a reference to something that will 403 later. The failure appears long after the deploy that caused it.</p>
+<p><strong>Retries.</strong> A job that fails partway and retries against a stored URL rather than re-generating will fail differently the second time, which makes the logs confusing.</p>
+<p><strong>Anything a client signed off on.</strong> The single worst version: an approved image exists only as a link in an email thread. The approval is now unverifiable and the file has to be regenerated, which — without a seed — produces a different image.</p>
+<h2>The fix, which is one line of discipline</h2>
+<p><strong>Download the bytes at generation time. Always. Before anything else happens.</strong></p>
+<p>Not &quot;when we need it&quot;, not &quot;if the user saves it&quot;. The moment the response comes back, write the file somewhere you control and record your own URL alongside the provider&#x27;s. Everything downstream references yours.</p>
+<p>Two things to store with it, because they cost nothing now and are unobtainable later:</p>
+<ul>
+<li><strong>The generation parameters</strong> — model, tier, delivered size, prompt, reference count. Without these the file is an orphan and nobody can explain where it came from.</li>
+<li><strong>The original provider URL and the time you fetched it.</strong> Useful exactly once, when something does not add up and you need to establish what came from where.</li>
+</ul>
+<h2>The part people get wrong in the other direction</h2>
+<p>Storing everything forever is also a mistake, just a slower one. Generation is cheap enough now that the volume is real, and most of it is drafts nobody will look at again.</p>
+<p>A workable default: keep everything for a short window, keep anything a human explicitly acted on indefinitely, and make &quot;acted on&quot; an event your system records rather than something you infer later. Downloaded, shared, approved, published — any of those flips the retention flag.</p>
+<h2>For people not building a pipeline</h2>
+<p>If you are generating a handful of images by hand, the whole thing reduces to one habit: <strong>save the file when you make it, not when you need it.</strong> And prefer a tool that gives you the file rather than a link with a clock on it.</p>
+<p>It also matters whether the provenance metadata survives the round trip. A file that left the provider carrying content credentials and arrived in your folder without them has lost something you cannot re-attach, and most resize and re-encode steps strip it silently.</p>
+<hr>
+<p>If you want to test the round trip without setting up an account first, <a href="https://gptimage25.top/free">you can run one without an account and keep the file</a> — which is also the fastest way to check what metadata your own pipeline preserves. The reasoning behind printing generation parameters next to every result, rather than leaving them to be reconstructed, is in <a href="https://gptimage25.top/">GPT Image 2.5 Image Generator</a>.</p>
+<p><em>Disclosure: that site is mine. Independent, not affiliated with OpenAI.</em></p></article><div class="more"><h2>Also here</h2><ul><li><a href="https://gi25-kept-bytes.onrender.com/reading-a-model-announcement-for-what-it-does-not-say/">Reading a model announcement for what it does not say</a></li></ul></div><footer>Kept Bytes — by Andy Swift. Independent; not affiliated with OpenAI or any model vendor.</footer>
+</div>
+</body>
+</html>

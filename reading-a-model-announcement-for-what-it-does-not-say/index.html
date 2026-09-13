@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Reading a model announcement for what it does not say — Kept Bytes</title>
+<meta name="description" content="Reading a model announcement for what it does not say">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://gi25-kept-bytes.onrender.com/reading-a-model-announcement-for-what-it-does-not-say/">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Reading a model announcement for what it does not say — Kept Bytes">
+<meta property="og:description" content="Reading a model announcement for what it does not say">
+<meta property="og:url" content="https://gi25-kept-bytes.onrender.com/reading-a-model-announcement-for-what-it-does-not-say/">
+<style>*{box-sizing:border-box}body{margin:0;font:16px/1.68 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:#1c1f23;background:#fdfdfc}
+.wrap{max-width:44rem;margin:0 auto;padding:2.2rem 1.25rem 4rem}
+header{border-bottom:1px solid #e5e3de;margin-bottom:2rem;padding-bottom:1.1rem}
+header a.brand{font-weight:650;font-size:1.02rem;color:#1c1f23;text-decoration:none;letter-spacing:-.01em}
+header p{margin:.3rem 0 0;color:#6b6f76;font-size:.9rem}
+h1{font-size:1.72rem;line-height:1.26;letter-spacing:-.02em;margin:0 0 .9rem}
+h2{font-size:1.2rem;margin:2.1rem 0 .6rem;letter-spacing:-.01em}
+h3{font-size:1.03rem;margin:1.6rem 0 .5rem}
+p,li{color:#26292e}
+a{color:#1256a8}
+blockquote{margin:1.3rem 0;padding:.1rem 0 .1rem 1rem;border-left:3px solid #dcd9d2;color:#4d5158}
+pre{background:#f4f3f0;padding:.85rem 1rem;overflow-x:auto;border-radius:5px;font-size:.86rem;line-height:1.5}
+code{background:#f4f3f0;padding:.12em .34em;border-radius:3px;font-size:.88em}
+pre code{background:none;padding:0}
+hr{border:0;border-top:1px solid #e5e3de;margin:2.2rem 0}
+ul.toc{list-style:none;padding:0}
+ul.toc li{margin:0 0 1.15rem}
+ul.toc a{font-weight:600;text-decoration:none;font-size:1.04rem}
+ul.toc p{margin:.2rem 0 0;color:#6b6f76;font-size:.92rem}
+footer{margin-top:3rem;padding-top:1.1rem;border-top:1px solid #e5e3de;color:#767a81;font-size:.85rem}
+footer a{color:#5b6068}
+.more{margin-top:2.6rem;padding-top:1.2rem;border-top:1px solid #e5e3de}
+.more h2{font-size:.82rem;text-transform:uppercase;letter-spacing:.07em;color:#767a81;margin:0 0 .6rem}
+.more ul{padding-left:1.1rem;margin:0}.more li{margin:.3rem 0;font-size:.94rem}</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<a class="brand" href="https://gi25-kept-bytes.onrender.com/">Kept Bytes</a>
+<p>Two notes on the parts of a generation you only miss after they are gone.</p>
+</header>
+<article><h1>Reading a model announcement for what it does not say</h1>
+<p>A new image model ships. The announcement says it is better. Three weeks later people are arguing about whether it actually is, because &quot;better&quot; was never a claim you could check.</p>
+<p>The useful skill here is not scepticism — the models genuinely do improve — it is reading the specific wording, because release posts are written carefully and the care is visible if you look for it.</p>
+<h2>The documentation is usually more precise than the blog post</h2>
+<p>This is the single highest-value habit. The announcement is written by marketing and optimises for a headline; the API reference and the model card are written by the people who have to support it and optimise for not being wrong.</p>
+<p>When the two disagree in emphasis, the documentation is the one to believe. A release post that says &quot;our new model sets a new standard for image quality&quot; will often sit next to documentation saying that <strong>one particular variant</strong> beats the previous generation on quality, and the other one trades quality for speed. Those are very different claims, and only one of them is checkable.</p>
+<h2>Five phrases worth slowing down for</h2>
+<p><strong>&quot;Up to.&quot;</strong> A ceiling under ideal conditions. It tells you the best case exists; it tells you nothing about the median. Every instance of &quot;up to&quot; is an invitation to ask &quot;in what configuration&quot;.</p>
+<p><strong>&quot;Comparable to&quot; / &quot;on par with.&quot;</strong> Usually means &quot;loses narrowly&quot;. Vendors do not use this phrasing about things they win.</p>
+<p><strong>&quot;Improved&quot; with no baseline.</strong> Improved against what — the previous version, a competitor, an internal build? Without the baseline this is not a measurement.</p>
+<p><strong>A benchmark name with no configuration.</strong> Arena-style leaderboards are real signal, but the number depends on which variant ran, at which tier, at what size. A score quoted without those is not reproducible, and an incremental Elo gain often gets described in language that suggests a step change.</p>
+<p><strong>Silence about a capability.</strong> The most informative part of any announcement. If a release discusses quality, speed and price at length and never mentions transparency support, text rendering or multi-turn consistency, that is not an oversight.</p>
+<h2>The questions that actually decide it for you</h2>
+<p>Announcements are written for everyone. Your decision is not. Four questions, none of which a release post answers:</p>
+<ol>
+<li><strong>What does one image cost at my configuration?</strong> Token billing means the published rate is not a price per image. You have to compute it.</li>
+<li><strong>Which variant should I use for my job?</strong> When two variants cost the same, the choice is entirely about the trade-off, and nobody else can make it for you.</li>
+<li><strong>Did the thing that was blocking me get fixed?</strong> If you switched away from the previous generation for a specific reason, that reason is the only benchmark that matters.</li>
+<li><strong>Can I tell which one served my request?</strong> If the interface does not report the variant, everything above is unverifiable in practice.</li>
+</ol>
+<h2>Why comparisons that concede things are worth more</h2>
+<p>A comparison page that has its subject winning every category is not telling you about the subject, it is telling you who wrote it. It is also useless as a decision tool, because the decision is precisely about the cases where the answer is not the same.</p>
+<p>The ones worth reading name the competitor&#x27;s wins first and are specific about them. That framing is unusual enough that it is a reasonable proxy for whether the rest of the page was written honestly — and it is the version that gets quoted, because a concession is evidence of something in a way that a claim is not.</p>
+<hr>
+<p>Applied to the current generation: the honest summary is that the headline change is the price ladder rather than the quality, and that only one of the two variants beats the previous generation on quality — which is what the vendor&#x27;s own documentation says, more precisely than the announcement did. Both are set out at <a href="https://gptimage25.top/gpt-image-2-5-vs-gpt-image-2">gptimage25.top</a>, and the head-to-head against the strongest competitor is <a href="https://gptimage25.top/gpt-image-2-5-vs-nano-banana-pro">a comparison that names the competitor&#x27;s wins first</a>.</p>
+<p><em>Disclosure: that site is mine. Independent, not affiliated with OpenAI.</em></p></article><div class="more"><h2>Also here</h2><ul><li><a href="https://gi25-kept-bytes.onrender.com/the-generated-image-url-that-expires/">The generated image URL that expires</a></li></ul></div><footer>Kept Bytes — by Andy Swift. Independent; not affiliated with OpenAI or any model vendor.</footer>
+</div>
+</body>
+</html>

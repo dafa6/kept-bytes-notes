@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://gi25-kept-bytes.onrender.com/sitemap.xml
